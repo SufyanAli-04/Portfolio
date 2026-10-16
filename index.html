@@ -159,6 +159,10 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 @media (max-width:760px){.proj,.about,.job,.hero .wrap{grid-template-columns:1fr}.links{display:none}.burger{display:flex}.menu{display:block}.fc{scale:.78}.orbit{display:none}.stage{width:74%}.wrap{padding:0 24px}.hero .wrap{padding:100px 24px 0}.proj:nth-child(even) .shot{order:0}section{padding:72px 0}.orb{opacity:.3}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
 .msg{font-size:14px;color:var(--mute);margin:0;text-align:center}.msg a{color:var(--acc);border-bottom:1px solid var(--acc)}.msg.e{color:#d93a0a}
+.ok{display:flex;gap:14px;align-items:center;padding:16px 18px;border:1px solid var(--acc);border-radius:16px;background:rgba(255,90,31,.08);text-align:left;animation:inUp .5s cubic-bezier(.2,.7,.2,1) both}
+.ok .tick{flex:none;width:34px;height:34px;border-radius:50%;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600}
+.ok b{display:block;font-size:18px;font-weight:600}
+.ok em{font-style:normal;color:var(--mute);font-size:14px}
 @media (max-width:760px){.facts{grid-template-columns:1fr}}
 .intro{position:fixed;inset:0;z-index:998;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:opacity .3s ease}
 .intro.p2{opacity:0;pointer-events:none}
@@ -264,7 +268,7 @@ function Typer(){
 function App(){
  useReveal();
  const [f,setF]=useState({nm:"",em:"",ms:""}),[st,setSt]=useState("");
- const upd=k=>e=>setF({...f,[k]:e.target.value});
+ const upd=k=>e=>{if(st==="ok")setSt("");setF({...f,[k]:e.target.value})};
  const body=encodeURIComponent(f.ms+"\n\n— "+f.nm+" ("+f.em+")"),sub=encodeURIComponent("Project enquiry from "+f.nm);
  const gm=`${GM}&su=${sub}&body=${body}`;
  const [sc,setSc]=useState(false),[open,setOpen]=useState(false);
@@ -374,9 +378,9 @@ function App(){
     <input placeholder="Your name" value={f.nm} onChange={upd("nm")}/>
     <input type="email" placeholder="Your email" value={f.em} onChange={upd("em")}/>
     <textarea rows="4" placeholder="Tell me about your project" value={f.ms} onChange={upd("ms")}/>
-    <button className="btn p" style={{justifyContent:"center",padding:"17px 24px",fontSize:16}} disabled={st==="sending"} onClick={send}>{st==="sending"?"Sending…":"Send message"}</button>
+    <button className="btn p" style={{justifyContent:"center",padding:"17px 24px",fontSize:16}} disabled={st==="sending"} onClick={send}>{st==="sending"?"Sending…":st==="ok"?"Message sent ✓":"Send message"}</button>
     {st==="err"&&<p className="msg e">Please add your name, a valid email and a message.</p>}
-    {st==="ok"&&<p className="msg">Thank you! Your message has been sent. I'll get back to you soon.</p>}
+    {st==="ok"&&<div className="ok" role="status"><span className="tick">✓</span><div><b>Thank you!</b><em>Your message has been sent. I'll get back to you soon.</em></div></div>}
     {st==="fail"&&<p className="msg e">Couldn't send right now. Please email me directly at <a href={GM} target="_blank" rel="noopener">{EMAIL}</a>.</p>}
     {st==="mail"&&<p className="msg">Gmail should open with your message ready, just press Send. Nothing opened? <a href={gm} target="_blank" rel="noopener">Open Gmail</a> or write to <b>{EMAIL}</b>.</p>}
    </div>
